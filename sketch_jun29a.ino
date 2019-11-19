@@ -10,6 +10,10 @@ int y;
 int z;
 int v;
 unsigned long tIni;
+bool record;
+char p='0';
+unsigned long t;
+unsigned long tCurrent;
 
 const int chipSelect = 4; //puerto donde está conectdo el CS del shield de SD
 File data;
@@ -26,45 +30,73 @@ void setup() {
     while (1);
   }
   Serial.println("initialization done.");
-
-  accelero.begin(10, 9, 7, 8, A0, A1, A2);    //sleepPin, selfTestPin, zeroGPin, gSelectPin, xPin, yPin, zPin
+  /**
+   * 10 ----- sleepPin
+   * 9  ----- selfTestPin
+   * 7  ----- zeroGPin
+   * 8  ----- gSelectPin
+   * A0 ----- xPin
+   * A1 ----- yPin
+   * A2 ----- zPin
+   */
+  accelero.begin(10, 9, 7, 8, A0, A1, A2);    
   accelero.setARefVoltage(3.3);                   //sets the AREF voltage to 3.3V
   accelero.setSensitivity(HIGH);                   //sets the sensitivity to +/-6G
   accelero.calibrate();
   Serial.println("Todo listo");
 }
-//Este método graba por 5 segundos
 
 void loop() {
-
   delay(200);
-  char p=Serial.read();
+  p=Serial.read();
   Serial.println(p);
-  if (p=='p') {
-    Serial.println("Creating file...");
-    data = SD.open("SA.csv", FILE_WRITE);
-    data.println("//////////////////////////////////////////");
-    data.println("");
-    data.println("//////////////////////////////////////////");
-    //Si el momento en que se presiona no hay diferencia de voltaje entre las patas del interruptor, entonces se debe leer LOW como el evento de presionar
-    tIni = millis();
-
-    while ((millis() - tIni) < 720000) {
-
-      String dataString = "";
-      // Tome los valores de X y Y y póngalos en un String:
-      x = abs(accelero.getXAccel());
-      y = abs(accelero.getYAccel());
-      z = abs(accelero.getZAccel());
-      //     z=abs(accelero.getZAccel());
-      v = x + y + z;
-      dataString = String(millis() - tIni) + "," + String(v) + ",";
-
-      data.println(dataString);
-      // print to the serial port too:
-      Serial.println(v);
-    }
-    Serial.println("Datos tomados.");
-    data.close();
+  if (p=='p'){
+    t=900000;
+    Serial.println(String(t));
+    grabar(t);
+    t=0;
+  }else if(p=='s'){
+    Serial.println(String(t));
+    t=1800000;
+    grabar(t);
+    t=0;
+  }else{
+    Serial.println(p);
   }
 }
+
+/**
+ * Records for the time given by parameters
+ * @param tRecord Time to record, in milliseconds
+ */
+ void grabar(unsigned long tRecord){
+  Serial.println("Creating file...");
+  data = SD.open("SA.csv", FILE_WRITE);
+  data.println("//////////////////////////////////////////");
+  data.println("");
+  data.println("//////////////////////////////////////////");
+  data.println("Time, Value, x, y, z");
+  Serial.println("Se grabara por " + String(tRecord/60000))+" minutos";
+  record=true;
+  
+  tIni = millis();
+  while (record) {
+    tCurrent=millis() - tIni;
+    record= tCurrent < tRecord;
+    Serial.println(record);
+    String dataString = "";
+    // Tome los valores de X y Y y póngalos en un String:
+    x = abs(accelero.getXAccel());
+    y = abs(accelero.getYAccel());
+    z = abs(accelero.getZAccel());
+    v = x + y + z;
+    dataString = String(millis() - tIni) + "," + String(v) + "," + String(x) + "," + String(y) + "," + String(z);
+
+    data.println(dataString);
+    // print to the serial port too:
+    Serial.println(dataString);
+  }
+  Serial.println("Datos tomados.");
+  Serial.println(record);
+  data.close();
+ }
