@@ -30,7 +30,10 @@ void setup() {
     while (1);
   }
   Serial.println("initialization done.");
+  
   /**
+   * This are the pins used to conect the accelerometer to the Arduino.
+   * Feel free to change them if you please.
    * 10 ----- sleepPin
    * 9  ----- selfTestPin
    * 7  ----- zeroGPin
@@ -93,8 +96,15 @@ void loop() {
     dataString = String(millis() - tIni) + "," + String(v) + "," + String(x) + "," + String(y) + "," + String(z);
 
     data.println(dataString);
-    // print to the serial port too:
+    // Print to the serial port too:
     Serial.println(dataString);
+    
+    //In case there's a problem and the record must be stoped suddenly and saved
+    p=Serial.read();
+    if(p=='x'){
+      record=false;
+      break;
+    }
   }
   Serial.println("Datos tomados.");
   Serial.println(record);
