@@ -32,6 +32,7 @@ for i in range(len(soundShape.a)):
         if tData>=start:
             if tData>end:
                 break
+            
             winData.append(data)
         j+=1
     
