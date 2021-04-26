@@ -15,7 +15,7 @@ char p='0';
 unsigned long t;
 unsigned long tCurrent;
 
-const int chipSelect = 4; //puerto donde está conectdo el CS del shield de SD
+//const int chipSelect = 4; //puerto donde está conectdo el CS del shield de SD
 File data;
 
 void setup() {
@@ -25,11 +25,11 @@ void setup() {
 
   Serial.print("Initializing SD card...");
   //Comprueba quw hay una tarjeta SD
-  if (!SD.begin(chipSelect)) {
-    Serial.println("initialization failed!");
-    while (1);
-  }
-  Serial.println("initialization done.");
+//  if (!SD.begin(chipSelect)) {
+//    Serial.println("initialization failed!");
+ //   while (1);
+//  }
+//  Serial.println("initialization done.");
   
   /**
    * This are the pins used to conect the accelerometer to the Arduino.
@@ -74,11 +74,11 @@ void loop() {
  */
  void grabar(unsigned long tRecord){
   Serial.println("Creating file...");
-  data = SD.open("SA.csv", FILE_WRITE);
-  data.println("//////////////////////////////////////////");
-  data.println("");
-  data.println("//////////////////////////////////////////");
-  data.println("Time, Value, x, y, z");
+//  data = SD.open("SA.csv", FILE_WRITE);
+//  data.println("//////////////////////////////////////////");
+//  data.println("");
+//  data.println("//////////////////////////////////////////");
+//  data.println("Time, Value, x, y, z");
   Serial.println("Se grabara por " + String(tRecord/60000))+" minutos";
   record=true;
   
@@ -95,7 +95,7 @@ void loop() {
     v = x + y + z;
     dataString = String(millis() - tIni) + "," + String(v) + "," + String(x) + "," + String(y) + "," + String(z);
 
-    data.println(dataString);
+//    data.println(dataString);
     // Print to the serial port too:
     Serial.println(dataString);
     

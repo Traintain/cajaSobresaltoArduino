@@ -37,7 +37,7 @@ void setup() {
 
 void loop() {
   delay(200);
-    t=350000;
+    t=10000;
     grabar(t);
     while(1){     
     }
