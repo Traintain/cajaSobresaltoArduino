@@ -11,7 +11,7 @@ int y;
 //int v;
 unsigned long tIni;
 bool record;
-char p='0';
+String p="0";
 unsigned long t;
 unsigned long tCurrent;
 
@@ -51,14 +51,13 @@ void setup() {
 
 void loop() {
   delay(200);
-  p=Serial.read();
-  Serial.println(p);
-  if (p=='p'){
+  p=Serial.readString();
+  if (p=="p"){
     t=900000;
     Serial.println(String(t));
     grabar(t);
     t=0;
-  }else if(p=='s'){
+  }else if(p=="s"){
     Serial.println(String(t));
     t=1800000;
     grabar(t);
@@ -86,7 +85,7 @@ void loop() {
   while (record) {
     tCurrent=millis() - tIni;
     record= tCurrent < tRecord;
-    Serial.println(record);
+    //Serial.println(record);
     String dataString = "";
     // Tome los valores de X y Y y póngalos en un String:
     x = accelero.getXVolt();
