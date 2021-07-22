@@ -1,5 +1,5 @@
-#include <SD.h> //SCK pin 13, MISO pin 12, MOSI pin 11
-#include <SPI.h>
+//#include <SD.h> //SCK pin 13, MISO pin 12, MOSI pin 11
+//#include <SPI.h>
 
 #include <AcceleroMMA7361.h>
 
@@ -7,8 +7,8 @@ AcceleroMMA7361 accelero;
 
 int x;
 int y;
-int z;
-int v;
+//int z;
+//int v;
 unsigned long tIni;
 bool record;
 char p='0';
@@ -16,14 +16,14 @@ unsigned long t;
 unsigned long tCurrent;
 
 //const int chipSelect = 4; //puerto donde está conectdo el CS del shield de SD
-File data;
+//File data;
 
 void setup() {
 
-  Serial.begin(9600);
+  Serial.begin(57600);
   Serial.println("Hey, listen");
 
-  Serial.print("Initializing SD card...");
+  //Serial.print("Initializing SD card...");
   //Comprueba quw hay una tarjeta SD
 //  if (!SD.begin(chipSelect)) {
 //    Serial.println("initialization failed!");
@@ -73,13 +73,13 @@ void loop() {
  * @param tRecord Time to record, in milliseconds
  */
  void grabar(unsigned long tRecord){
-  Serial.println("Creating file...");
+//  Serial.println("Creating file...");
 //  data = SD.open("SA.csv", FILE_WRITE);
 //  data.println("//////////////////////////////////////////");
 //  data.println("");
 //  data.println("//////////////////////////////////////////");
 //  data.println("Time, Value, x, y, z");
-  Serial.println("Se grabara por " + String(tRecord/60000))+" minutos";
+  Serial.println("Se grabara por " + String(tRecord/60000)+" minutos");
   record=true;
   
   tIni = millis();
@@ -89,24 +89,24 @@ void loop() {
     Serial.println(record);
     String dataString = "";
     // Tome los valores de X y Y y póngalos en un String:
-    x = abs(accelero.getXAccel());
-    y = abs(accelero.getYAccel());
-    z = abs(accelero.getZAccel());
-    v = x + y + z;
-    dataString = String(millis() - tIni) + "," + String(v) + "," + String(x) + "," + String(y) + "," + String(z);
+    x = accelero.getXVolt();
+    y = accelero.getYVolt();
+    //z = abs(accelero.getZVolt());
+    //v = x + y + z;
+    //dataString = String(millis() - tIni) + "," + String(v) + "," + String(x) + "," + String(y) + "," + String(z);
 
 //    data.println(dataString);
     // Print to the serial port too:
-    Serial.println(dataString);
+    Serial.println( String(millis() - tIni) + "," + String(x) + "," + String(y));
     
     //In case there's a problem and the record must be stoped suddenly and saved
-    p=Serial.read();
-    if(p=='x'){
-      record=false;
-      break;
+    //p=Serial.read();
+    //if(p=='x'){
+    //  record=false;
+    //  break;
     }
+    Serial.println("Datos tomados.");
   }
-  Serial.println("Datos tomados.");
-  Serial.println(record);
-  data.close();
- }
+  
+  //Serial.println(record);
+  //data.close();
