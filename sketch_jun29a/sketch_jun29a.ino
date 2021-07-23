@@ -12,8 +12,10 @@ int y;
 unsigned long tIni;
 bool record;
 String p="0";
+//char p='0';
 unsigned long t;
 unsigned long tCurrent;
+String dataString;
 
 //const int chipSelect = 4; //puerto donde está conectdo el CS del shield de SD
 //File data;
@@ -52,14 +54,20 @@ void setup() {
 void loop() {
   delay(200);
   p=Serial.readString();
+  //p=Serial.read();
   if (p=="p"){
     t=900000;
     Serial.println(String(t));
     grabar(t);
     t=0;
   }else if(p=="s"){
-    Serial.println(String(t));
+ //   Serial.println(String(t));
     t=1800000;
+    grabar(t);
+    t=0;
+  }else if (p=="t"){
+    Serial.println(String(t));
+    t=5000;
     grabar(t);
     t=0;
   }else{
@@ -78,25 +86,27 @@ void loop() {
 //  data.println("");
 //  data.println("//////////////////////////////////////////");
 //  data.println("Time, Value, x, y, z");
-  Serial.println("Se grabara por " + String(tRecord/60000)+" minutos");
+//  Serial.println("Se grabara por " + String(tRecord/60000)+" minutos");
   record=true;
-  
-  tIni = millis();
+
+  Serial.println("L");
+  tIni = millis();  
   while (record) {
     tCurrent=millis() - tIni;
     record= tCurrent < tRecord;
     //Serial.println(record);
-    String dataString = "";
+    //String dataString = "";
     // Tome los valores de X y Y y póngalos en un String:
     x = accelero.getXVolt();
     y = accelero.getYVolt();
     //z = abs(accelero.getZVolt());
     //v = x + y + z;
-    //dataString = String(millis() - tIni) + "," + String(v) + "," + String(x) + "," + String(y) + "," + String(z);
+    dataString = String(millis() - tIni) + "," + String(x) + "," + String(y);
 
 //    data.println(dataString);
     // Print to the serial port too:
-    Serial.println( String(millis() - tIni) + "," + String(x) + "," + String(y));
+    
+    Serial.println(dataString);
     
     //In case there's a problem and the record must be stoped suddenly and saved
     //p=Serial.read();
