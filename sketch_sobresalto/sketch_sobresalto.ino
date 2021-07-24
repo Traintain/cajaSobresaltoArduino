@@ -65,6 +65,9 @@ void loop() {
     t=1800000;
     grabar(t);
     t=0;
+    while(true){
+      Serial.println("Datos tomados."); 
+    }
   }else if (p=="t"){
     Serial.println(String(t));
     t=5000;
