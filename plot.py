@@ -1,7 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-f=pd.read_csv('24-07-2021 prueba 2.csv')
+f=pd.read_csv('25.07.2021.C10_1.csv')
 print(f.head())
 f.plot(x='Time',y='xVolt')
 f.plot(x='Time',y='yVolt')

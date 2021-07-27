@@ -7,11 +7,13 @@ import serial
 import time
 import pygame
 import numpy
+from soundWaveGraphGenerator import times as times
 
-headers = { 'Time': [],'xVolt':[],'yVolt':[]}
+headers = { 'Trial':[], 'Time': [],'xVolt':[],'yVolt':[]}
 #time=[]
 #xVolt=[]
 #yVolt=[]
+
 data=pd.DataFrame(headers)
 pygame.mixer.pre_init(44100, -16, 1, 512)
 pygame.mixer.init()
@@ -27,35 +29,43 @@ try:
         print(a)
         if 'DONETodo listo' in a:
             #pygame.mixer.music.load("Audios/01 - calibracion a 60 dB.mp3")
-            #pygame.mixer.music.load("Audios/02 - habituación a la caja - 5 minutos.mp3")
-            #pygame.mixer.music.play()
-            #time.sleep(300)
-            #pygame.mixer.music.pause()
+            print('Inicia habituacion')
+            pygame.mixer.music.load("Audios/02 - habituación a la caja - 5 minutos.mp3")
+            pygame.mixer.music.play()
+            time.sleep(300)
+            pygame.mixer.music.pause()
+            print('Finaliza habituacion. Inicia toma de datos')
             pygame.mixer.music.load("Audios/05 -  sobresalto e inhibicion- 30 minutos.mp3")
             time.sleep(0.1)
             arduino.write(bytes('s', 'utf-8'))
+            i=0
             while 'Datos tomados' not in a:
                 a=arduino.readline().decode('UTF-8')
                 if 'L' in a:
                     pygame.mixer.music.play()
                 else:
+                    a=a[:a.find('\r')]
+                    #print(a)
                     sample=a.rstrip().split(',')
                     #print(sample)
-                    if len(sample) == 3:
-                        fila={'Time':sample[0],'xVolt':sample[1],'yVolt':sample[2]}
-                        data=data.append(fila,ignore_index=True)
-#                    time=time.append(sample[0])
-#                    xVolt=xVolt.append(sample[1])
-#                    yVolt = yVolt.append(sample[2])
+                    try:
+                        if (len(sample) == 3) and ((times[i]-5000) < int(sample[0]) < (times[i]+5000)):
+                            fila={'Trial':i,'Time':int(sample[0]),'xVolt':int(sample[1]),'yVolt':int(sample[2])}
+                            data.loc[len(data)]=fila
+                        if int(sample[0]) > (times[i]+5000):
+                            i=i+1
+                    except:
+                        print('Error al aumentar i')
+                        print(sample)
+                        continue
             break
 except:
-    print('Finaliza toma de datos. Se grabaron en total:')
-    print(sample[0])
-    data.to_csv('24-07-2021 prueba 2.csv')
+    print(a)
+    print(sample)
 finally:
     print('Finaliza toma de datos. Se grabaron en total:')
     print(sample[0])
-    data.to_csv('24-07-2021 prueba 2.csv')
+    data.to_csv('27.07.2021 C12_1.csv')
 #f.close()
 
 #pygame.mixer.Sound("Audios/02 - habituación a la caja - 5 minutos.mp3")
