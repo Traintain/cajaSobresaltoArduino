@@ -70,7 +70,7 @@ void loop() {
     }
   }else if (p=="t"){
     Serial.println(String(t));
-    t=5000;
+    t=60000;
     grabar(t);
     t=0;
   }else{
@@ -117,6 +117,7 @@ void loop() {
     //  record=false;
     //  break;
     }
+    delay(1000);
     Serial.println("Datos tomados.");
   }
   
