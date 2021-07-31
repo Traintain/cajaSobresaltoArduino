@@ -16,6 +16,7 @@ String p="0";
 unsigned long t;
 unsigned long tCurrent;
 String dataString;
+String currTime;
 
 //const int chipSelect = 4; //puerto donde está conectdo el CS del shield de SD
 //File data;
@@ -104,7 +105,8 @@ void loop() {
     y = accelero.getYVolt();
     //z = abs(accelero.getZVolt());
     //v = x + y + z;
-    dataString = String(millis() - tIni) + "," + String(x) + "," + String(y);
+    currTime=String(millis() - tIni);
+    dataString = currTime + "," + String(x) + "," + String(y);
 
 //    data.println(dataString);
     // Print to the serial port too:
@@ -118,7 +120,9 @@ void loop() {
     //  break;
     }
     delay(1000);
-    Serial.println("Datos tomados.");
+    for(int i=0;i<10;i++){
+      Serial.println("Datos tomados.");
+    }
   }
   
   //Serial.println(record);

@@ -1,6 +1,3 @@
-//#include <SD.h> //SCK pin 13, MISO pin 12, MOSI pin 11
-//#include <SPI.h>
-
 #include <AcceleroMMA7361.h>
 
 AcceleroMMA7361 accelero;
@@ -9,17 +6,16 @@ int x;
 int y;
 //int z;
 //int v;
-int in_time=0;
+int pulse;
+
 unsigned long tIni;
-bool record;
-String p="0";
-//char p='0';
-unsigned long t;
 unsigned long tCurrent;
+String currTime;
+bool record;
+String p="";
+//char p='0';
 String dataString;
 
-//const int chipSelect = 4; //puerto donde está conectdo el CS del shield de SD
-//File data;
 
 void setup() {
 
@@ -33,6 +29,14 @@ void setup() {
  //   while (1);
 //  }
 //  Serial.println("initialization done.");
+  /**
+   * This pins are used to conect to the microphone
+   * 2 ----- OUT
+   * 3 ----- VCC
+   */
+  pinMode(2,INPUT);
+  pinMode(3,OUTPUT);
+  digitalWrite(3, HIGH);
   
   /**
    * This are the pins used to conect the accelerometer to the Arduino.
@@ -54,10 +58,13 @@ void setup() {
 }
 
 void loop() {
-  in_time=Serial.parseInt();
-  //p=Serial.read();
-  if(in_time != 0){
-    grabar(in_time);
+  while(p!=""){
+    p=Serial.readString();
+  }
+  pulse=digitalRead(2);
+  if(pulse==HIGH){
+    grabar(2000);
+    delay(1000);
   }
 }
 
@@ -67,7 +74,6 @@ void loop() {
  */
  void grabar(int tRecord){
   record=true;
-  Serial.println("L");
   tIni = millis();  
   while (record) {
     tCurrent=millis() - tIni;
@@ -77,13 +83,12 @@ void loop() {
     y = accelero.getYVolt();
     //z = abs(accelero.getZVolt());
     //v = x + y + z;
-    dataString = String(millis() - tIni) + "," + String(x) + "," + String(y);
+    currTime=String(millis() - tIni);
+    dataString = currTime + "," + String(x) + "," + String(y);
 
     // Print to the serial port
     
     Serial.println(dataString);
     }
-    for(int i=0;i<10;i++){
-      Serial.println("Datos tomados.");
-    }
-  }
+  Serial.println("Datos tomados.");
+}
