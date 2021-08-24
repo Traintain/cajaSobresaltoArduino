@@ -14,6 +14,7 @@ String currTime;
 bool record;
 String p="";
 //char p='0';
+String input = "";
 String dataString;
 
 
@@ -61,10 +62,13 @@ void loop() {
   while(p!=""){
     p=Serial.readString();
   }
-  pulse=digitalRead(2);
-  if(pulse==HIGH){
-    grabar(2000);
+  input = Serial.readString();
+  if(input == "r"){
+    Serial.println("Entre input != "" y grabar ");
+    grabar(4000);
+    Serial.println("Termina grabar ");
     delay(1000);
+    input="";
   }
 }
 
@@ -73,8 +77,9 @@ void loop() {
  * @param tRecord Time to record, in milliseconds
  */
  void grabar(int tRecord){
+  Serial.println("Inicia grabar");
   record=true;
-  tIni = millis();  
+  tIni = millis();
   while (record) {
     tCurrent=millis() - tIni;
     record= tCurrent < tRecord;
@@ -83,8 +88,10 @@ void loop() {
     y = accelero.getYVolt();
     //z = abs(accelero.getZVolt());
     //v = x + y + z;
-    currTime=String(millis() - tIni);
-    dataString = currTime + "," + String(x) + "," + String(y);
+    pulse=digitalRead(2);
+    currTime=String(tCurrent);
+    
+    dataString = currTime + "," + String(x) + "," + String(y)+","+String(pulse);
 
     // Print to the serial port
     

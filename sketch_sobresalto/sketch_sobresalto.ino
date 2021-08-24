@@ -17,6 +17,7 @@ unsigned long t;
 unsigned long tCurrent;
 String dataString;
 String currTime;
+int pulse;
 
 //const int chipSelect = 4; //puerto donde está conectdo el CS del shield de SD
 //File data;
@@ -33,6 +34,14 @@ void setup() {
  //   while (1);
 //  }
 //  Serial.println("initialization done.");
+  /**
+   * This pins are used to conect to the microphone
+   * 2 ----- OUT
+   * 3 ----- VCC
+   */
+  pinMode(2,INPUT);
+  pinMode(3,OUTPUT);
+  digitalWrite(3, HIGH);
   
   /**
    * This are the pins used to conect the accelerometer to the Arduino.
@@ -105,10 +114,11 @@ void loop() {
     y = accelero.getYVolt();
     //z = abs(accelero.getZVolt());
     //v = x + y + z;
-    currTime=String(millis() - tIni);
-    dataString = currTime + "," + String(x) + "," + String(y);
+    pulse=digitalRead(2);
+    currTime=String(tCurrent);
+    
+    dataString = currTime + "," + String(x) + "," + String(y)+","+String(pulse);
 
-//    data.println(dataString);
     // Print to the serial port too:
     
     Serial.println(dataString);
@@ -119,11 +129,6 @@ void loop() {
     //  record=false;
     //  break;
     }
-    delay(1000);
-    for(int i=0;i<10;i++){
-      Serial.println("Datos tomados.");
-    }
+    Serial.flush();
+    Serial.println("Datos tomados.");
   }
-  
-  //Serial.println(record);
-  //data.close();
