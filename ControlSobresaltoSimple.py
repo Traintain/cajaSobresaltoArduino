@@ -6,7 +6,13 @@ import pandas as pd
 import serial
 import time
 import pygame
-from soundWaveGraphGenerator import times as times
+#from soundWaveGraphGenerator import times as times
+from constantsTwoDayProtocol import timesDayOne as times
+
+#Number of trials per session
+# 72 for one day protocol
+# 13 and 
+nTrials=13
 
 headers = { 'Trial':[], 'Time': [],'xVolt':[],'yVolt':[],'Sound':[]}
 
@@ -14,7 +20,8 @@ data=pd.DataFrame(headers)
 pygame.mixer.pre_init(44100, -16, 2, 64)
 pygame.mixer.init()
 
-arduino=serial.Serial('/dev/cu.usbserial-1420',57600,timeout=1)
+#arduino=serial.Serial('/dev/cu.usbserial-1420',57600,timeout=1)
+arduino=serial.Serial('COM3',57600,timeout=1)
 time.sleep(1)
 try:
     i = 0
@@ -32,15 +39,17 @@ try:
 #    time.sleep(300)
 #    pygame.mixer.music.pause()
     print('Finaliza habituacion. Inicia toma de datos')
-    pygame.mixer.music.load("Audios/05 -  sobresalto e inhibicion- 30 minutos.mp3")
+    pygame.mixer.music.load("Audios/TwoDayProtocol/01 - día 1 - habituación.wav")
     time.sleep(0.1)
     i = 0
     arduino.write(bytes('p', 'utf-8'))
     pygame.mixer.music.play()
-    inicio=time.process_time_ns()
-    while i < 72:
-        temp=(time.process_time_ns()-inicio)//1000000
-        if (times[i]-5000) < temp:
+    inicio=time.perf_counter_ns()
+    while i < nTrials:
+        temp=(time.perf_counter_ns()-inicio)//1000000
+        if (times[i]-2000) < temp:
+            print(str(temp)+', '+str(temp/1000))
+            arduino.reset_input_buffer()
             arduino.write(bytes('r', 'utf-8'))
             print('Inicia grabacion')
             while 'Datos tomados' not in a:
@@ -49,13 +58,13 @@ try:
                 try:
 #                    print(a)
                     a=a[:a.find('\r')]
-                    print(a)
+                    #print(a)
                     sample=a.split(',')
                     #print(sample)
                     if len(sample) == 4:
                         fila={'Trial':i,'Time':int(sample[0]),'xVolt':int(sample[1]),'yVolt':int(sample[2]),'Sound':int(sample[3])}
                         data.loc[len(data)]=fila
-                        print('Dato listo en dataframe')
+                        #print('Dato listo en dataframe')
                 except:
                     print('Error, datos incompletos o corruptos')
                     print(sample)
@@ -73,3 +82,5 @@ finally:
     print('Finaliza toma de datos. Se grabaron en total:')
     print(i)
     data.to_csv('Prueba microfono.csv',index=False)
+    pygame.mixer.music.stop()
+    arduino.close()
