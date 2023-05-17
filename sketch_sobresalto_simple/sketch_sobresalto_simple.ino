@@ -1,4 +1,5 @@
 #include <AcceleroMMA7361.h>
+// https://github.com/jeroendoggen/Arduino-MMA7361-library
 
 AcceleroMMA7361 accelero;
 
@@ -32,26 +33,26 @@ void setup() {
 //  Serial.println("initialization done.");
   /**
    * This pins are used to conect to the microphone
-   * 2 ----- OUT
+   * A3 --- out
    * 3 ----- VCC
    */
-  pinMode(2,INPUT);
+  // pinMode(2,INPUT);
   pinMode(3,OUTPUT);
   digitalWrite(3, HIGH);
   
   /**
    * This are the pins used to conect the accelerometer to the Arduino.
    * Feel free to change them if you please.
-   * 10 ----- sleepPin
-   * 9  ----- selfTestPin
-   * 7  ----- zeroGPin
-   * 8  ----- gSelectPin
+   * 12 ----- sleepPin
+   * 11  ----- selfTestPin
+   * 10  ----- zeroGPin
+   * 9  ----- gSelectPin
    * A0 ----- xPin
    * A1 ----- yPin
    * A2 ----- zPin
    * 3V3 ---- AREF
    */
-  accelero.begin(10, 9, 7, 8, A0, A1, A2);    
+  accelero.begin(12, 11, 10, 9, A0, A1, A2);    
   accelero.setARefVoltage(3.3);                   //sets the AREF voltage to 3.3V
   accelero.setSensitivity(HIGH);                   //sets the sensitivity to +/-6G
   accelero.calibrate();
@@ -66,7 +67,7 @@ void loop() {
   if(input == "r"){
     Serial.println("Entre input != "" y grabar ");
     grabar(4000);
-    Serial.println("Termina grabar ");
+    Serial.println("Termina grabar");
     delay(1000);
     input="";
   }
@@ -88,7 +89,7 @@ void loop() {
     y = accelero.getYVolt();
     //z = abs(accelero.getZVolt());
     //v = x + y + z;
-    pulse=digitalRead(2);
+    pulse=analogRead(A3);
     currTime=String(tCurrent);
     
     dataString = currTime + "," + String(x) + "," + String(y)+","+String(pulse);
