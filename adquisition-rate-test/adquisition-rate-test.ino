@@ -62,9 +62,8 @@ void grabar(unsigned long tRecord) {
     pulse = digitalRead(2);
     //    v = x + y;
     //dataString = ;
-    // Print to the serial port too:
-    //Serial.println(String(millis() - tIni) + "," + String(x) + "," + String(y));
-    Serial.println(x + y);
+    Serial.println(String(millis() - tIni) + "," + String(x) + "," + String(y));
+    //Serial.println(x + y);
     tCurrent = millis() - tIni;
   }
   Serial.println("Datos tomados.");
