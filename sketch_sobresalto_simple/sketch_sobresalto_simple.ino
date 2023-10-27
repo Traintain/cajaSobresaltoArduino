@@ -24,21 +24,14 @@ void setup() {
   Serial.begin(57600);
   Serial.println("Hey, listen");
 
-  //Serial.print("Initializing SD card...");
-  //Comprueba quw hay una tarjeta SD
-//  if (!SD.begin(chipSelect)) {
-//    Serial.println("initialization failed!");
- //   while (1);
-//  }
-//  Serial.println("initialization done.");
   /**
    * This pins are used to conect to the microphone
    * A3 --- out
    * 3 ----- VCC
    */
-  // pinMode(2,INPUT);
-  pinMode(3,OUTPUT);
-  digitalWrite(3, HIGH);
+  pinMode(2,INPUT);
+  //pinMode(3,OUTPUT);
+  //digitalWrite(3, HIGH);
   
   /**
    * This are the pins used to conect the accelerometer to the Arduino.
@@ -89,7 +82,8 @@ void loop() {
     y = accelero.getYVolt();
     //z = abs(accelero.getZVolt());
     //v = x + y + z;
-    pulse=analogRead(A3);
+    //pulse=analogRead(A7);
+    pulse=digitalRead(2);
     currTime=String(tCurrent);
     
     dataString = currTime + "," + String(x) + "," + String(y)+","+String(pulse);

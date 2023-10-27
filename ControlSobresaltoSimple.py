@@ -48,7 +48,7 @@ try:
     pygame.mixer.music.load("Audios/02 - habituación a la caja - 5 minutos.mp3")
     print(time.strftime('%Y-%m-%d %H:%M %Z', time.localtime(time.time())))
     pygame.mixer.music.play()
-    # time.sleep(300)
+    time.sleep(300)
     pygame.mixer.music.pause()
     print('Finaliza Aclimatación. Inicia Bloque I')
     pygame.mixer.music.load("Audios/04 - habituación a sobresalto - 15 minutos.mp3")
@@ -93,9 +93,10 @@ try:
     pygame.mixer.music.play()
     print(time.strftime('%Y-%m-%d %H:%M %Z', time.localtime(time.time())))
     inicio=time.perf_counter_ns()
-    while i < (nTrialsBlockI + nTrialsBlockII):
+    j=0
+    while j < nTrialsBlockII:
         temp=(time.perf_counter_ns()-inicio)//1000000
-        if (timesBlockII[i]-2000) < temp:
+        if (timesBlockII[j]-2000) < temp:
             print(str(temp)+', '+str(temp/1000))
             fila={'Trial':i,'TimeBegin':int(temp)}
             recordStartTime.loc[len(recordStartTime)]=fila
@@ -118,6 +119,7 @@ try:
                     continue
             a=''
             i=i+1
+            j=j+i
             print('Finaliza en el ensayo numero: ' + str(i))
             arduino.reset_input_buffer()
 except Exception as e:
