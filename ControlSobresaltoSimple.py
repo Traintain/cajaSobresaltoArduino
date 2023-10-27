@@ -43,6 +43,8 @@ try:
         a = arduinoOutput.decode('UTF-8')
         print(a)
     arduino.reset_input_buffer()
+    print('Cuando desee que inicien los 5 minutos de habituación oprima enter')
+    start_signal = input()
     #pygame.mixer.music.load("Audios/01 - calibracion a 60 dB.mp3")
     print('Inician 5 minutos de habituacion')
     pygame.mixer.music.load("Audios/02 - habituación a la caja - 5 minutos.mp3")
