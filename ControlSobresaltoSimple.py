@@ -76,10 +76,11 @@ arduino=serial.Serial('COM5',57600,timeout=1)
 time.sleep(1)
 try:
     sample=[0]
-    while 'DONETodo listo' not in a:
+    ard_input = ''
+    while 'DONETodo listo' not in ard_input:
         arduinoOutput = arduino.readline()
-        a = arduinoOutput.decode('UTF-8')
-        print(a)
+        ard_input = arduinoOutput.decode('UTF-8')
+        print(ard_input)
     arduino.reset_input_buffer()
     print('Cuando desee que inicien los 5 minutos de habituación, escriba s y presione enter')
     start_signal = input()
@@ -137,10 +138,9 @@ try:
 except Exception as e:
     print(e)
     print(time.strftime('%Y-%m-%d %H:%M %Z', time.localtime(time.time())))
-    print(a)
-    print(sample)
-    print('i')
-    print(i)
+    print(f'Arduino input: {ard_input}')
+    print(f'Last sample: {sample}')
+    print(f'i: {i}')
 finally:
     
     print(time.strftime('%Y-%m-%d %H:%M %Z', time.localtime(time.time())))
