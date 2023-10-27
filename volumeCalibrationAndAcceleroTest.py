@@ -8,6 +8,7 @@ import time
 from matplotlib import pyplot as plt
 import contextlib
 import copy
+from sys import exit
 with contextlib.redirect_stdout(None):
     import pygame
 
