@@ -36,10 +36,10 @@ def grabar_ensayo(i):
     ard_input=''
     while 'Datos tomados' not in ard_input:
         time.sleep(0.001)
-        a = arduino.readline().decode()
+        ard_input = arduino.readline().decode()
         try:
-            a=a[:a.find('\r')]
-            sample=a.split(',')
+            ard_input=ard_input[:ard_input.find('\r')]
+            sample=ard_input.split(',')
             if len(sample) == 4:
                 trial_data['Trial'].append(i)
                 trial_data['Time'].append(int(sample[0]))
