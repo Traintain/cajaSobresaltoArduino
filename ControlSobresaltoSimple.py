@@ -115,7 +115,7 @@ try:
 
 
     #------------------------------------------------------------------
-    pygame.mixer.music.load("Audios/05 -  sobresalto e inhibicion- 30 minutos.mp3")
+    pygame.mixer.music.load("Audios/06 -  sobresalto, prepulso e inhibicion- 30 minutos.mp3")
     time.sleep(0.1)
     # arduino.write(bytes('p', 'utf-8'))
     pygame.mixer.music.play()
