@@ -31,7 +31,6 @@ def grabar_ensayo(i):
     arduino.reset_input_buffer()
     trial_data=deepcopy(headers)
     arduino.write(bytes('r', 'utf-8'))
-    time.sleep(0.9)
     print('Inicia grabacion')
     ard_input=''
     while 'Datos tomados' not in ard_input:
@@ -54,17 +53,17 @@ def grabar_ensayo(i):
             print(sample)
             continue
 
-        df=pd.DataFrame(trial_data)
-        maxVal=max(df['xVolt'])+max(df['yVolt'])
-        minVal=min(df['xVolt'])+min(df['yVolt'])
-        # Factor usado para escalar valores binarios cuando se usa el micrófono digital
-        factor=minVal+(maxVal-minVal)/4
+    df=pd.DataFrame(trial_data)
+    maxVal=max(df['xVolt'])+max(df['yVolt'])
+    minVal=min(df['xVolt'])+min(df['yVolt'])
+    # Factor usado para escalar valores binarios cuando se usa el micrófono digital
+    factor=minVal+(maxVal-minVal)/4
 
-        #plt.plot(df['Time'],((df['Sound']*(-1)+max(df['Sound']))*0.2+minVal), 'tab:orange')
-        plt.plot(df['Time'],(df['Sound']*factor), 'tab:orange')
-        plt.ylim([minVal,maxVal])
-        plt.title(f'Ensayo No. {i}', loc='left')
-        return df
+    #plt.plot(df['Time'],((df['Sound']*(-1)+max(df['Sound']))*0.2+minVal), 'tab:orange')
+    plt.plot(df['Time'],(df['Sound']*factor), 'tab:orange')
+    plt.ylim([minVal,maxVal])
+    plt.title(f'Ensayo No. {i}', loc='left')
+    return df
     #trialData=[]
 #for i in range(0,nTrialsBlockI+nTrialsBlockII):
 #    trialData.append(pd.DataFrame(headers))
