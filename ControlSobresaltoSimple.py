@@ -15,7 +15,7 @@ from soundWaveGraphGenerator import timesBlockI, timesBlockII
 #Number of trials per session
 # 72 for one day protocol
 # 13 and 60 for the two days protocol
-nTrialsBlockI=36
+nTrialsBlockI=2
 nTrialsBlockII=72
 
 headers = { 'Trial':[],
@@ -102,7 +102,7 @@ try:
     inicio=time.perf_counter_ns()
     while i < nTrialsBlockI:
         temp=(time.perf_counter_ns()-inicio)//1000000
-        if (timesBlockI[i]-2000) < temp:
+        if (timesBlockI[i]-2900) < temp:
             print(str(temp)+', '+str(temp/1000))
             arduino.reset_input_buffer()
             df = grabar_ensayo(i, arduino)
@@ -125,13 +125,13 @@ try:
     j=0
     while j < nTrialsBlockII:
         temp=(time.perf_counter_ns()-inicio)//1000000
-        if (timesBlockII[j]-2000) < temp:
+        if (timesBlockII[j]-2900) < temp:
             print(str(temp)+', '+str(temp/1000))
             # fila={'Trial':i,'TimeBegin':int(temp)}
             df = grabar_ensayo(i, arduino)
             data_b2 = pd.concat([data_b2,df])
-            i=+1
-            j=+i
+            i+=1
+            j+=1
             print(f'Finaliza en el ensayo numero: {j}')
             arduino.reset_input_buffer()
 except Exception as e:
