@@ -27,7 +27,7 @@ headers = { 'Trial':[],
 data_b1=pd.DataFrame(headers)
 data_b2=pd.DataFrame(headers)
 
-def grabar_ensayo(i):
+def grabar_ensayo(i, arduino):
     arduino.reset_input_buffer()
     trial_data=deepcopy(headers)
     arduino.write(bytes('r', 'utf-8'))
@@ -60,9 +60,11 @@ def grabar_ensayo(i):
     factor=minVal+(maxVal-minVal)/4
 
     #plt.plot(df['Time'],((df['Sound']*(-1)+max(df['Sound']))*0.2+minVal), 'tab:orange')
+    plt.plot(df['Time'],df['xVolt']+df['yVolt'], 'tab:blue')
     plt.plot(df['Time'],(df['Sound']*factor), 'tab:orange')
     plt.ylim([minVal,maxVal])
     plt.title(f'Ensayo No. {i}', loc='left')
+    plt.show()
     return df
     #trialData=[]
 #for i in range(0,nTrialsBlockI+nTrialsBlockII):
@@ -71,7 +73,7 @@ pygame.mixer.pre_init(44100, -16, 2, 64)
 pygame.mixer.init()
 
 #arduino=serial.Serial('/dev/cu.usbserial-1420',57600,timeout=1)
-arduino=serial.Serial('COM5',57600,timeout=1)
+arduino=serial.Serial('COM7',57600,timeout=1)
 time.sleep(1)
 try:
     sample=[0]
@@ -87,7 +89,7 @@ try:
     pygame.mixer.music.load("Audios/02 - habituación a la caja - 5 minutos.mp3")
     print(time.strftime('%Y-%m-%d %H:%M %Z', time.localtime(time.time())))
     pygame.mixer.music.play()
-    time.sleep(300)
+    #time.sleep(300)
     pygame.mixer.music.pause()
     print('Finaliza Aclimatación. Inicia Bloque I')
     pygame.mixer.music.load("Audios/04 - habituación a sobresalto - 15 minutos.mp3")
@@ -103,9 +105,7 @@ try:
         if (timesBlockI[i]-2000) < temp:
             print(str(temp)+', '+str(temp/1000))
             arduino.reset_input_buffer()
-            arduino.write(bytes('r', 'utf-8'))
-            print('Inicia grabacion')
-            df = grabar_ensayo(i)
+            df = grabar_ensayo(i, arduino)
             data_b1 = pd.concat([data_b1,df])
             i+=1
             print(f'Finaliza en el ensayo numero {i}')
@@ -128,7 +128,7 @@ try:
         if (timesBlockII[j]-2000) < temp:
             print(str(temp)+', '+str(temp/1000))
             # fila={'Trial':i,'TimeBegin':int(temp)}
-            df = grabar_ensayo(i)
+            df = grabar_ensayo(i, arduino)
             data_b2 = pd.concat([data_b2,df])
             i=+1
             j=+i
